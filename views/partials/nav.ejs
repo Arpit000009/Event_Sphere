@@ -1,0 +1,76 @@
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold fs-4" href="/">
+            <i class="fas fa-feather-alt me-2"></i>manage_events
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/dashboard">
+                        <i class="fas fa-home me-1"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/events">
+                        <i class="fas fa-calendar me-1"></i> Events
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about">
+                        <i class="fas fa-info-circle me-1"></i> About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact">
+                        <i class="fas fa-envelope me-1"></i> Contact
+                    </a>
+                </li>
+
+                <% if (locals.user) { %>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events/new">
+                            <i class="fas fa-plus-circle me-1"></i> Add Event
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<%= user.profileImage || 'https://picsum.photos/seed/default-avatar/40/40.jpg' %>"
+                                class="rounded-circle me-2" width="30" height="30" alt="Profile">
+                            <%= user.name || 'User' %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i> Profile</a>
+                            </li>
+                            <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-2"></i> Settings</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>
+                                    Logout</a></li>
+                        </ul>
+                    </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">
+                                <i class="fas fa-user-plus me-1"></i> Create Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light ms-2 px-3" href="/login">
+                                <i class="fas fa-sign-in-alt me-1"></i> Sign In
+                            </a>
+                        </li>
+                        <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+  

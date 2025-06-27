@@ -3,10 +3,12 @@
 
 <head>
     <title>Register</title>
+    <%- include('../partials/header.ejs') %>
 </head>
 
 <body>
-    <h1>Register</h1>
+    <%- include('../partials/nav.ejs') %>
+    
     <form action="/register" method="POST">
         <input type="text" name="name" placeholder="Name" required><br />
         <input type="email" name="email" placeholder="Email" required><br />
@@ -14,6 +16,8 @@
         <button type="submit">Register</button>
     </form>
     <p>Already have an account? <a href="/login">Login</a></p>
+
+    <%- include('../partials/footer.ejs') %>
 </body>
 
 </html>

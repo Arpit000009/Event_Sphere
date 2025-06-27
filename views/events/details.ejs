@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>create</title>
+    <%- include('../partials/header.ejs') %>
+</head>
+
+<body>
+    
+        <%- include('../partials/nav') %>
+    
+            <div class="container mt-5">
+                <h2>
+                    <%= event.title %>
+                </h2>
+                <p><strong>Date:</strong>
+                    <%= new Date(event.date).toDateString() %>
+                </p>
+                <p><strong>Description:</strong>
+                    <%= event.description %>
+                </p>
+                <p><strong>Created By:</strong>
+                    <%= event.createdBy.name %>
+                </p>
+    
+                <a href="/dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
+            </div>
+    
+            <%- include('../partials/footer') %>
+
+</body>
+
+</html>

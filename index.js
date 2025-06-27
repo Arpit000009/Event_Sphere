@@ -37,6 +37,23 @@ app.use(session({
   })
 }));
 
+app.use(async (req, res, next) => {
+  res.locals.user = null;
+
+  if (req.session.userId) {
+    try {
+      const User = require('./models/User'); // adjust if path differs
+      const user = await User.findById(req.session.userId).lean();
+      res.locals.user = user;
+    } catch (err) {
+      console.error('Error loading user into locals:', err);
+    }
+  }
+
+  next();
+});
+
+
 // ✅ Routes
 app.use('/', require('./routes/authRoutes'));
 app.use('/events', require('./routes/eventRoutes'));
