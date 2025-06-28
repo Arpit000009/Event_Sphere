@@ -3,34 +3,51 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>create</title>
-    <%- include('../partials/header.ejs') %>
+    <title>
+        <%= event.title %> - Details
+    </title>
+    <%- include('../partials/header') %>
 </head>
 
 <body>
-    
-        <%- include('../partials/nav') %>
-    
-            <div class="container mt-5">
-                <h2>
-                    <%= event.title %>
-                </h2>
-                <p><strong>Date:</strong>
-                    <%= new Date(event.date).toDateString() %>
-                </p>
-                <p><strong>Description:</strong>
-                    <%= event.description %>
-                </p>
-                <p><strong>Created By:</strong>
-                    <%= event.createdBy.name %>
-                </p>
-    
-                <a href="/dashboard" class="btn btn-secondary mt-3">Back to Dashboard</a>
-            </div>
-    
-            <%- include('../partials/footer') %>
+    <%- include('../partials/nav') %>
 
+        <div class="container mt-5 mb-5">
+            <h2 class="mb-3">
+                <%= event.title %>
+            </h2>
+
+            <p><strong>Date:</strong>
+                <%= new Date(event.date).toDateString() %>
+            </p>
+            <% if (event.time) { %>
+                <p><strong>Time:</strong>
+                    <%= event.time %>
+                </p>
+                <% } %>
+                    <% if (event.location) { %>
+                        <p><strong>Location:</strong>
+                            <%= event.location %>
+                        </p>
+                        <% } %>
+                            <p><strong>Price:</strong> ₹<%= event.price %>
+                            </p>
+
+                            <p><strong>Description:</strong></p>
+                            <p>
+                                <%= event.description %>
+                            </p>
+
+                            <% if (user && user.role==='user' ) { %>
+                                <form action="/tickets/purchase/<%= event._id %>" method="POST" class="mt-4">
+                                    <button type="submit" class="btn btn-success">Buy Ticket</button>
+                                </form>
+                                <% } %>
+
+                                    <a href="/dashboard" class="btn btn-secondary mt-3">Back</a>
+        </div>
+
+        <%- include('../partials/footer') %>
 </body>
 
 </html>

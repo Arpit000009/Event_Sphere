@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Buy Ticket</title>
+    <%- include('partials/header') %>
+</head>
+
+<body>
+    <%- include('partials/nav') %>
+
+        <div class="container mt-5">
+            <h2>Buy Ticket for <%= event.title %>
+            </h2>
+            <p><strong>Price:</strong> ₹<%= event.price %>
+            </p>
+
+            <form action="/tickets/purchase/<%= event._id %>" method="POST">
+                <button class="btn btn-success">Proceed to Pay</button>
+            </form>
+        </div>
+
+        <%- include('partials/footer') %>
+</body>
+
+</html>

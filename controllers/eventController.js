@@ -8,12 +8,15 @@ exports.getCreateForm = (req, res) => {
 // Create new event
 exports.createEvent = async (req, res) => {
   try {
-    const { title, date, description } = req.body;
+    const { title, date, description, time, location, price } = req.body;
 
     const newEvent = new Event({
       title,
       date,
       description,
+      time,
+      location,
+      price,
       createdBy: req.session.userId
     });
 
@@ -32,7 +35,11 @@ exports.getEventDetails = async (req, res) => {
 
     if (!event) return res.status(404).send('Event not found');
 
-    res.render('events/details', { event, title: event.title });
+    res.render('events/details', {
+      event,
+      user: req.session.user,  // ensure user context is passed if needed in details.ejs
+      title: event.title
+    });
   } catch (err) {
     console.error('Error fetching event:', err);
     res.status(500).send('Internal Server Error');
@@ -56,7 +63,17 @@ exports.getEditForm = async (req, res) => {
 // Update event
 exports.updateEvent = async (req, res) => {
   try {
-    await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { title, date, description, time, location, price } = req.body;
+
+    await Event.findByIdAndUpdate(req.params.id, {
+      title,
+      date,
+      description,
+      time,
+      location,
+      price
+    }, { new: true });
+
     res.redirect('/dashboard');
   } catch (err) {
     console.error('Error updating event:', err);

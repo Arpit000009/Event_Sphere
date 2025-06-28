@@ -2,38 +2,52 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>create</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Event</title>
     <%- include('../partials/header.ejs') %>
 </head>
 
 <body>
     <%- include('../partials/nav.ejs') %>
-    <div class="container">
-        <h2 class="mb-4">Create New Event</h2>
-    
-        <form action="/events" method="POST">
-            <div class="mb-3">
-                <label for="title" class="form-label">Event Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
+        <div class="container mt-5 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="mb-4 text-center">Create New Event</h2>
+                    <form action="/events" method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Event Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Event Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="time" class="form-label">Event Time</label>
+                            <input type="time" class="form-control" id="time" name="time" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="location" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ticket Price (INR)</label>
+                            <input type="number" class="form-control" name="price" required min="0"
+                                placeholder="e.g. 100" />
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary px-4">Create Event</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-    
-            <div class="mb-3">
-                <label for="date" class="form-label">Date</label>
-                <input type="date" class="form-control" id="date" name="date" required>
-            </div>
-    
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <textarea class="form-control" id="description" name="description" rows="4"></textarea>
-            </div>
-    
-            <button type="submit" class="btn btn-primary">Create Event</button>
-        </form>
-    </div>
-    
-    <%- include('../partials/footer') %>
+        </div>
+        <%- include('../partials/footer') %>
 </body>
 
 </html>

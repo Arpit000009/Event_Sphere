@@ -2,11 +2,10 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
     <%- include('./partials/header') %>
-
         <style>
             .text-truncate-2 {
                 display: -webkit-box;
@@ -53,10 +52,18 @@
     <%- include('partials/nav') %>
 
         <div class="container mt-5">
-            <h1 class="mb-4">Your Events</h1>
+            <h1 class="mb-4">
+                <% if (user.role==='admin' ) { %>Your Events<% } else { %>Available Events<% } %>
+            </h1>
 
             <% if (events.length===0) { %>
-                <div class="alert alert-info">You haven't created any events yet.</div>
+                <div class="alert alert-info">
+                    <% if (user.role==='admin' ) { %>
+                        You haven't created any events yet.
+                        <% } else { %>
+                            No events available right now.
+                            <% } %>
+                </div>
                 <% } else { %>
                     <div class="row">
                         <% events.forEach(event=> { %>
@@ -68,17 +75,28 @@
                                     <div class="event-date">
                                         <%= new Date(event.date).toDateString() %>
                                     </div>
-                                    <p class="mt-2 mb-3 text-truncate-2">
+                                    <p class="mt-2 mb-2 text-truncate-2">
                                         <%= event.description %>
+                                    </p>
+                                    <p><strong>Price:</strong> ₹<%= event.price %>
                                     </p>
 
                                     <div class="event-actions">
                                         <a href="/events/<%= event._id %>" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye me-1"></i> Details
                                         </a>
-                                        <a href="/events/<%= event._id %>/edit" class="btn btn-sm btn-warning">
-                                            <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
+                                        <% if (user.role==='admin' ) { %>
+                                            <a href="/events/<%= event._id %>/edit" class="btn btn-sm btn-warning">
+                                                <i class="fas fa-edit me-1"></i> Edit
+                                            </a>
+                                            <% } else { %>
+                                                <form action="/tickets/purchase/<%= event._id %>" method="POST"
+                                                    class="d-inline">
+                                                    <button type="submit" class="btn btn-sm btn-success">
+                                                        <i class="fas fa-ticket-alt me-1"></i> Buy Ticket
+                                                    </button>
+                                                </form>
+                                                <% } %>
                                     </div>
                                 </div>
                             </div>

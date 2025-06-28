@@ -8,6 +8,9 @@ router.post('/', auth, auth.isAdmin, eventCtrl.createEvent);
 router.get('/:id/edit', auth, auth.isAdmin, eventCtrl.getEditForm);
 router.put('/:id', auth, auth.isAdmin, eventCtrl.updateEvent);
 router.delete('/:id', auth, auth.isAdmin, eventCtrl.deleteEvent);
-router.get('/events/:id', eventController.getEventDetails);
+
+router.get('/:id', eventCtrl.getEventDetails);
+
+
 
 module.exports = router;
