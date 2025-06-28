@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <%- include('../partials/header') %>
+        <style>
+            .btn-disabled {
+                background-color: #0d6efd !important;
+                color: white;
+                pointer-events: none;
+            }
+        </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+        <div class="container mt-5">
+            <h2>Payment for: <%= event.title %>
+            </h2>
+            <p><strong>Price:</strong> ₹<%= event.price %>
+            </p>
+
+            <!-- Confirm Payment Button -->
+            <form id="paymentForm" action="/tickets/purchase/<%= event._id %>" method="POST">
+                <input type="hidden" name="price" value="<%= event.price %>">
+                <button type="submit" class="btn btn-success" id="confirmBtn">Confirm Payment</button>
+            </form>
+
+            <a href="/dashboard" class="btn btn-secondary mt-3">Cancel</a>
+        </div>
+
+        <script>
+            document.getElementById('paymentForm').addEventListener('submit', function (e) {
+                const btn = document.getElementById('confirmBtn');
+                btn.innerText = 'Ticket Purchased';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-disabled');
+            });
+        </script>
+
+        <%- include('../partials/footer') %>
+</body>
+
+</html>

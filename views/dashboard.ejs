@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
     <%- include('./partials/header') %>
+
         <style>
             .text-truncate-2 {
                 display: -webkit-box;
@@ -42,8 +43,14 @@
                 margin-top: 15px;
             }
 
-            .event-actions a {
-                margin-right: 10px;
+            .event-actions a,
+            .event-actions form {
+                display: inline-block;
+            }
+
+            .btn[disabled] {
+                cursor: not-allowed;
+                opacity: 0.7;
             }
         </style>
 </head>
@@ -53,7 +60,11 @@
 
         <div class="container mt-5">
             <h1 class="mb-4">
-                <% if (user.role==='admin' ) { %>Your Events<% } else { %>Available Events<% } %>
+                <% if (user.role==='admin' ) { %>
+                    Your Events
+                    <% } else { %>
+                        Available Events
+                        <% } %>
             </h1>
 
             <% if (events.length===0) { %>
@@ -85,19 +96,39 @@
                                         <a href="/events/<%= event._id %>" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye me-1"></i> Details
                                         </a>
+
                                         <% if (user.role==='admin' ) { %>
                                             <a href="/events/<%= event._id %>/edit" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </a>
                                             <% } else { %>
-                                                <form action="/tickets/purchase/<%= event._id %>" method="POST"
-                                                    class="d-inline">
-                                                    <button type="submit" class="btn btn-sm btn-success">
-                                                        <i class="fas fa-ticket-alt me-1"></i> Buy Ticket
+                                                <% if (event.purchased) { %>
+                                                    <button class="btn btn-sm btn-secondary" disabled>
+                                                        <i class="fas fa-check me-1"></i> Ticket Purchased
                                                     </button>
-                                                </form>
-                                                <% } %>
+                                                    <% } else { %>
+                                                        <a href="/events/<%= event._id %>/price"
+                                                            class="btn btn-sm btn-success">
+                                                            <i class="fas fa-ticket-alt me-1"></i> Buy Ticket
+                                                        </a>
+                                                        <% } %>
+                                                            <% } %>
                                     </div>
+
+                                    <!-- Admin-only Attendee List -->
+                                    <% if (user.role==='admin' && event.attendees && event.attendees.length> 0) { %>
+                                        <div class="mt-3">
+                                            <p><strong>Attendees:</strong></p>
+                                            <ul>
+                                                <% event.attendees.forEach(attendee=> { %>
+                                                    <li>
+                                                        <%= attendee.name %> - <%= attendee.email %>
+                                                    </li>
+                                                    <% }) %>
+                                            </ul>
+                                        </div>
+                                        <% } %>
+                                      
                                 </div>
                             </div>
                             <% }) %>

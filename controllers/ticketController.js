@@ -1,27 +1,43 @@
+// const Event = require('../models/Event');
+
+// exports.renderPaymentPage = async (req, res) => {
+//   const event = await Event.findById(req.params.eventId).lean();
+//   res.render('payment', { event });
+// };
+
+
+// // exports.purchaseTicket = async (req, res) => {
+// //   try {
+// //     // You can store ticket record or just redirect
+// //     res.send('Payment success (not yet implemented)');
+// //   } catch (err) {
+// //     console.error('❌ Error in purchaseTicket:', err);
+// //     res.status(500).send('Server Error');
+// //   }
+// // };
+
+
+// ticketController.js
 const Event = require('../models/Event');
+const User = require('../models/User');
 
-// Render Razorpay payment UI
-exports.renderBuyPage = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.eventId);
-    if (!event) return res.status(404).send('Event not found');
-    res.render('payment', { event }); // Use `views/payment.ejs`
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
-};
-
-// Purchase simulation (replace with Razorpay)
 exports.purchaseTicket = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.eventId);
-    if (!event) return res.status(404).send('Event not found');
+  const userId = req.session.userId;
+  const eventId = req.params.eventId;
 
-    // In real Razorpay flow, you'd verify payment signature here
-    res.send(`✅ Payment successful for ₹${event.price}`);
+  try {
+    const event = await Event.findById(eventId);
+
+    if (!event.attendees.includes(userId)) {
+      event.attendees.push(userId);
+      await event.save();
+    }
+
+    req.session[`purchased_${eventId}`] = true; // persist UI across sessions
+
+    res.redirect('/dashboard');
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
+    console.error('❌ Error in purchaseTicket:', err);
+    res.status(500).send('Error processing ticket');
   }
 };

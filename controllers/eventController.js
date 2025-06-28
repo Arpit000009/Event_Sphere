@@ -91,3 +91,9 @@ exports.deleteEvent = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+
+exports.renderPricePage = async (req, res) => {
+  const event = await Event.findById(req.params.id).lean();
+  res.render('events/price', { event });
+};

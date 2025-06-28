@@ -10,6 +10,8 @@ router.put('/:id', auth, auth.isAdmin, eventCtrl.updateEvent);
 router.delete('/:id', auth, auth.isAdmin, eventCtrl.deleteEvent);
 
 router.get('/:id', eventCtrl.getEventDetails);
+router.get('/:id/price', auth, eventCtrl.renderPricePage);
+
 
 
 

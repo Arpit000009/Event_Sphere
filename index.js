@@ -58,6 +58,7 @@ app.use(async (req, res, next) => {
 app.use('/', require('./routes/authRoutes'));
 app.use('/events', require('./routes/eventRoutes'));
 app.use('/dashboard', require('./routes/dashboardRoutes'));
+// app.use('/tickets', require('./routes/ticketRoutes'));
 
 // ✅ Server
 const PORT = process.env.PORT || 3000;
