@@ -1,4 +1,5 @@
 const Event = require('../models/Event');
+const Ticket = require('../models/Ticket');
 
 // Show create form
 exports.getCreateForm = (req, res) => {
@@ -9,7 +10,7 @@ exports.getCreateForm = (req, res) => {
 exports.createEvent = async (req, res) => {
   try {
     const { title, date, description, time, location, price } = req.body;
-
+    
     const newEvent = new Event({
       title,
       date,
@@ -17,9 +18,9 @@ exports.createEvent = async (req, res) => {
       time,
       location,
       price,
-      createdBy: req.session.userId
+      creator: req.session.userId
     });
-
+    
     await newEvent.save();
     res.redirect('/dashboard');
   } catch (err) {
@@ -31,13 +32,13 @@ exports.createEvent = async (req, res) => {
 // Show event details
 exports.getEventDetails = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate('createdBy').lean();
-
+    const event = await Event.findById(req.params.id).populate('creator').lean();
+    
     if (!event) return res.status(404).send('Event not found');
-
+    
     res.render('events/details', {
       event,
-      user: req.session.user,  // ensure user context is passed if needed in details.ejs
+      user: res.locals.user,
       title: event.title
     });
   } catch (err) {
@@ -50,9 +51,12 @@ exports.getEventDetails = async (req, res) => {
 exports.getEditForm = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).lean();
-
+    
     if (!event) return res.status(404).send('Event not found');
-
+    if (event.creator.toString() !== req.session.userId) {
+      return res.status(403).send('Access denied');
+    }
+    
     res.render('events/edit', { event, title: 'Edit Event' });
   } catch (err) {
     console.error('Error loading edit form:', err);
@@ -64,7 +68,13 @@ exports.getEditForm = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   try {
     const { title, date, description, time, location, price } = req.body;
-
+    
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).send('Event not found');
+    if (event.creator.toString() !== req.session.userId) {
+      return res.status(403).send('Access denied');
+    }
+    
     await Event.findByIdAndUpdate(req.params.id, {
       title,
       date,
@@ -73,7 +83,7 @@ exports.updateEvent = async (req, res) => {
       location,
       price
     }, { new: true });
-
+    
     res.redirect('/dashboard');
   } catch (err) {
     console.error('Error updating event:', err);
@@ -84,7 +94,14 @@ exports.updateEvent = async (req, res) => {
 // Delete event
 exports.deleteEvent = async (req, res) => {
   try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).send('Event not found');
+    if (event.creator.toString() !== req.session.userId) {
+      return res.status(403).send('Access denied');
+    }
+    
     await Event.findByIdAndDelete(req.params.id);
+    await Ticket.deleteMany({ event: req.params.id }); // Clean up tickets
     res.redirect('/dashboard');
   } catch (err) {
     console.error('Error deleting event:', err);
@@ -92,8 +109,31 @@ exports.deleteEvent = async (req, res) => {
   }
 };
 
-
+// Render price page
 exports.renderPricePage = async (req, res) => {
-  const event = await Event.findById(req.params.id).lean();
-  res.render('events/price', { event });
+  try {
+    const eventId = req.params.id;
+    const userId = req.session.userId;
+    
+    // Get event details
+    const event = await Event.findById(eventId).lean();
+    if (!event) {
+      return res.status(404).send('Event not found');
+    }
+    
+    // Check if user already purchased ticket
+    const alreadyPurchased = await Ticket.findOne({
+      user: userId,
+      event: eventId
+    });
+    
+    res.render('events/price', {
+      event,
+      alreadyPurchased: !!alreadyPurchased,
+      user: res.locals.user
+    });
+  } catch (err) {
+    console.error('Error in renderPricePage:', err);
+    res.status(500).send('Something went wrong');
+  }
 };

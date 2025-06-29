@@ -11,4 +11,11 @@ router.post('/register', authCtrl.postRegister);
 
 router.get('/logout', authCtrl.logout);
 
+router.get('/contact', (req, res) => {
+    res.render('contact');
+  });
+router.get('/about', (req, res) => {
+    res.render('../views/auth/about.ejs');
+  });
+
 module.exports = router;

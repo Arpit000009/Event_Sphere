@@ -17,7 +17,57 @@ mongoose.connect('mongodb://127.0.0.1:27017/manage_events', {
 .then(() => console.log('✅ MongoDB connected'))
 .catch(err => {
   console.error('❌ MongoDB connection error:', err);
-  process.exit(1);
+  process.exit(1);const express = require('express');
+  const session = require('express-session');
+  const methodOverride = require('method-override');
+  const connectDB = require('./config/db');
+  const User = require('./models/User');
+  
+  const app = express();
+  
+  // Connect to database
+  connectDB();
+  
+  // Middleware
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(methodOverride('_method'));
+  
+  // Session configuration
+  app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+  }));
+  
+  // Set view engine
+  app.set('view engine', 'ejs');
+  
+  // User middleware - make user available in all views
+  app.use(async (req, res, next) => {
+    if (req.session.userId) {
+      try {
+        const user = await User.findById(req.session.userId);
+        res.locals.user = user;
+        req.session.user = user;
+      } catch (err) {
+        console.error('Error fetching user:', err);
+      }
+    }
+    next();
+  });
+  
+  // Routes
+  app.use('/', require('./routes/authRoutes'));
+  app.use('/dashboard', require('./routes/dashboardRoutes'));
+  app.use('/events', require('./routes/eventRoutes'));
+  
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+
 });
 
 // ✅ Middlewares

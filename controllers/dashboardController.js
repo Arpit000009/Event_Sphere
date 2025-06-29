@@ -1,41 +1,42 @@
-const Ticket = require('../models/Ticket');
 const Event = require('../models/Event');
-const User = require('../models/User');
+const Ticket = require('../models/Ticket');
 
 exports.getDashboard = async (req, res) => {
-  const { role, userId } = req.session;
-
-  let events = [];
-
-  if (role === 'admin') {
-    // Get events created by the admin
-    events = await Event.find({ createdBy: userId }).lean();
-
-    // For each event, find ticket buyers
-    for (const event of events) {
-      const tickets = await Ticket.find({ event: event._id }).populate('user').lean();
-
-      // Attach user info to the event
-      event.purchasedUsers = tickets.map(ticket => ({
-        name: ticket.user?.name || 'Unknown',
-        email: ticket.user?.email || 'N/A'
-      }));
+  try {
+    const userId = req.session.userId;
+    const userRole = res.locals.user?.role;
+    
+    let events;
+    
+    if (userRole === 'admin') {
+      // Admin sees their created events with attendees
+      events = await Event.find({ creator: userId })
+        .populate('attendees.user', 'name email')
+        .sort({ date: 1 });
+    } else {
+      // Regular users see all events
+      events = await Event.find({})
+        .populate('creator', 'name')
+        .sort({ date: 1 })
+        .lean();
+      
+      // Check which events the user has purchased tickets for
+      const userTickets = await Ticket.find({ user: userId }).select('event');
+      const purchasedEventIds = userTickets.map(ticket => ticket.event.toString());
+      
+      // Mark events as purchased
+      events.forEach(event => {
+        event.purchased = purchasedEventIds.includes(event._id.toString());
+      });
     }
-
-  } else {
-    // Get all events for regular users
-    events = await Event.find().lean();
-
-    // Find all tickets bought by this user
-    const userTickets = await Ticket.find({ user: userId }).lean();
-    const purchasedEventIds = userTickets.map(t => t.event.toString());
-
-    // Mark events as purchased for UI logic
-    events = events.map(event => ({
-      ...event,
-      purchased: purchasedEventIds.includes(event._id.toString())
-    }));
+    
+    res.render('dashboard', {
+      events,
+      user: res.locals.user,
+      message: req.query.message
+    });
+  } catch (err) {
+    console.error('Error in getDashboard:', err);
+    res.status(500).send('Something went wrong');
   }
-
-  res.render('dashboard', { events });
 };
