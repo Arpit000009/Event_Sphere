@@ -1,74 +1,103 @@
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-lg position-relative"
+    style="backdrop-filter: blur(15px); background: linear-gradient(135deg, #121212 0%, #1f1f1f 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 15px;">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold fs-4" href="/">
-            <i class="fas fa-feather-alt me-2"></i>manage_events
+        <a class="navbar-brand fw-bold fs-4 position-relative" href="/"
+            style="background: linear-gradient(45deg, #00bfff, #007bff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            <i class="fas fa-feather-alt me-2"
+                style="background: linear-gradient(45deg, #00bfff, #007bff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+            <span style="letter-spacing: 0.5px;">EventSphere</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+            aria-label="Toggle navigation" style="background: rgba(255, 255, 255, 0.15); border-radius: 8px;">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ms-auto">
+            <ul class="navbar-nav ms-auto text-light">
+                <!-- Home -->
                 <li class="nav-item">
-                    <a class="nav-link active" href="/dashboard">
-                        <i class="fas fa-home me-1"></i> Home
+                    <a class="nav-link active px-3 py-2" href="/dashboard"
+                        style="border-radius: 8px; background: rgba(0, 123, 255, 0.25); color: #ffffff; font-weight: 500;">
+                        <i class="fas fa-home me-2"></i> Home
                     </a>
                 </li>
+
+                <!-- Events -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/events">
-                        <i class="fas fa-calendar me-1"></i> Events
+                    <a class="nav-link px-3 py-2 text-white-50" href="/events"
+                        style="border-radius: 8px; transition: all 0.3s ease;">
+                        <i class="fas fa-calendar me-2"></i> Events
                     </a>
                 </li>
+
+                <!-- Group Chat -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/events/chat/group">Group Chat</a>            
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/about">
-                        <i class="fas fa-info-circle me-1"></i> About
+                    <a class="nav-link px-3 py-2 text-white-50" href="/events/chat/group"
+                        style="border-radius: 8px; transition: all 0.3s ease;">
+                        <i class="fas fa-comments me-2"></i> Group Chat
                     </a>
                 </li>
+
+                <!-- About -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/contact">
-                        <i class="fas fa-envelope me-1"></i> Contact
+                    <a class="nav-link px-3 py-2 text-white-50" href="/about"
+                        style="border-radius: 8px; transition: all 0.3s ease;">
+                        <i class="fas fa-info-circle me-2"></i> About
+                    </a>
+                </li>
+
+                <!-- Contact -->
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 text-white-50" href="/contact"
+                        style="border-radius: 8px; transition: all 0.3s ease;">
+                        <i class="fas fa-envelope me-2"></i> Contact
                     </a>
                 </li>
 
                 <% if (locals.user) { %>
+                    <!-- Add Event -->
                     <li class="nav-item">
-                        <a class="nav-link" href="/events/new">
-                            <i class="fas fa-plus-circle me-1"></i> Add Event
+                        <a class="nav-link px-3 py-2 text-white" href="/events/new"
+                            style="border-radius: 8px; background: rgba(40, 167, 69, 0.2); font-weight: 500;">
+                            <i class="fas fa-plus-circle me-2"></i> Add Event
                         </a>
                     </li>
+
+                    <!-- User Dropdown -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center px-3 py-2 text-white" href="#"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px;">
                             <img src="<%= user.profileImage || 'https://picsum.photos/seed/default-avatar/40/40.jpg' %>"
-                                class="rounded-circle me-2" width="30" height="30" alt="Profile">
+                                class="rounded-circle me-2" width="30" height="30" alt="Profile"
+                                style="border: 2px solid rgba(255, 255, 255, 0.2);">
                             <%= user.name || 'User' %>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-user me-2"></i> Profile</a>
-                            </li>
-                            <li><a class="dropdown-item" href="/settings"><i class="fas fa-cog me-2"></i> Settings</a>
-                            </li>
+                        <ul class="dropdown-menu dropdown-menu-end"
+                            style="background-color: #2b2b2b; border-radius: 10px;">
+                            <li><a class="dropdown-item text-white-50" href="/profile"><i class="fas fa-user me-2"></i>
+                                    Profile</a></li>
+                            <li><a class="dropdown-item text-white-50" href="/settings"><i class="fas fa-cog me-2"></i>
+                                    Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>
-                                    Logout</a></li>
+                            <li><a class="dropdown-item text-danger" href="/logout"><i
+                                        class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                         </ul>
                     </li>
                     <% } else { %>
+                        <!-- Guest Links -->
                         <li class="nav-item">
-                            <a class="nav-link" href="/register">
-                                <i class="fas fa-user-plus me-1"></i> Create Account
+                            <a class="nav-link text-white-50 px-3 py-2" href="/register">
+                                <i class="fas fa-user-plus me-2"></i> Create Account
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link btn btn-outline-light ms-2 px-3" href="/login">
-                                <i class="fas fa-sign-in-alt me-1"></i> Sign In
+                            <a class="nav-link btn btn-outline-light ms-2 px-3 py-2" href="/login"
+                                style="border-radius: 8px;">
+                                <i class="fas fa-sign-in-alt me-2"></i> Sign In
                             </a>
                         </li>
                         <% } %>
@@ -76,4 +105,3 @@
         </div>
     </div>
 </nav>
-  

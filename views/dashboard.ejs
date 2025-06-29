@@ -7,67 +7,109 @@
     <title>Dashboard</title>
     <%- include('./partials/header') %>
 
-        <style>
-            .text-truncate-2 {
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
-            .event-card {
-                background: #fff;
-                border-radius: 10px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-                padding: 20px;
-                margin-bottom: 20px;
-                transition: box-shadow 0.3s;
-            }
-
-            .event-card:hover {
-                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-            }
-
-            .event-title {
-                font-size: 18px;
-                font-weight: bold;
-            }
-
-            .event-date {
-                font-size: 14px;
-                color: #666;
-            }
-
-            .event-actions {
-                margin-top: 15px;
-            }
-
-            .event-actions a,
-            .event-actions form {
-                display: inline-block;
-            }
-
-            .btn[disabled] {
-                cursor: not-allowed;
-                opacity: 0.7;
-            }
-
-            .attendees-list {
-                background: #f8f9fa;
-                padding: 15px;
-                border-radius: 8px;
-                margin-top: 15px;
-            }
-
-            .attendee-item {
-                background: white;
-                padding: 10px;
-                margin: 5px 0;
-                border-radius: 5px;
-                border-left: 4px solid #007bff;
-            }
-        </style>
+    <style>
+        body {
+            background-color: #e3f2fd; /* Soft blue background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    
+        .text-truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    
+        .event-card {
+            background: #ffffff;
+            border-left: 5px solid #1976d2; /* Blue border indicator */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(25, 118, 210, 0.1); /* Blue tint shadow */
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+    
+        .event-card:hover {
+            box-shadow: 0 6px 18px rgba(25, 118, 210, 0.2);
+        }
+    
+        .event-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0d47a1; /* Deep blue */
+        }
+    
+        .event-date {
+            font-size: 14px;
+            color: #1565c0;
+        }
+    
+        .event-actions {
+            margin-top: 15px;
+        }
+    
+        .event-actions a,
+        .event-actions form {
+            display: inline-block;
+        }
+    
+        .btn[disabled] {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    
+        .attendees-list {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #1976d2;
+        }
+    
+        .attendee-item {
+            background: #ffffff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+    
+        .attendees-list h6 {
+            color: #0d47a1;
+            font-weight: bold;
+        }
+    
+        .btn-outline-primary {
+            border-color: #1976d2;
+            color: #1976d2;
+        }
+    
+        .btn-outline-primary:hover {
+            background-color: #1976d2;
+            color: white;
+        }
+    
+        .alert-success {
+            background-color: #d0f0d9;
+            border-color: #81c784;
+            color: #256029;
+        }
+    
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+    
+        .alert-info {
+            background-color: #dbeafe;
+            border-color: #90caf9;
+            color: #0d47a1;
+        }
+    </style>
+    
 </head>
 
 <body>
@@ -161,41 +203,41 @@
                                                                             </a>
                                                                             <% } %>
                                                                                 <% } %>
-                                                        </div>
+                                                        
 
                                                         <!-- Admin-only Attendee List -->
-                                                        <% if (user.role==='admin' && event.attendees &&
-                                                            event.attendees.length> 0) { %>
-                                                            <div class="attendees-list">
-                                                                <h6><i class="fas fa-users me-2"></i>Registered
-                                                                    Attendees (<%= event.attendees.length %>)</h6>
-                                                                <% event.attendees.forEach(attendee=> { %>
-                                                                    <div class="attendee-item">
-                                                                        <strong>
-                                                                            <%= attendee.name %>
-                                                                        </strong>
-                                                                        <br>
-                                                                        <small class="text-muted">
-                                                                            <i class="fas fa-envelope me-1"></i>
-                                                                            <%= attendee.email %>
-                                                                                <span class="ms-3">
-                                                                                    <i class="fas fa-clock me-1"></i>
-                                                                                    Registered: <%= new
-                                                                                        Date(attendee.registeredAt).toLocaleDateString()
-                                                                                        %>
-                                                                                </span>
-                                                                        </small>
+                                                        <% if (user.role==='admin' ) { %>
+                                                            <button class="btn btn-sm btn-outline-primary mt-2" type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#attendees-<%= event._id %>">
+                                                                <i class="fas fa-users me-1"></i> View Attendees
+                                                            </button>
+                                                        
+                                                            <div class="collapse mt-3" id="attendees-<%= event._id %>">
+                                                                <% if (event.attendees && event.attendees.length> 0) { %>
+                                                                    <div class="attendees-list">
+                                                                        <h6><i class="fas fa-users me-2"></i>Registered Attendees (<%= event.attendees.length %>)</h6>
+                                                                        <% event.attendees.forEach(attendee=> { %>
+                                                                            <div class="attendee-item">
+                                                                                <strong>
+                                                                                    <%= attendee.name %>
+                                                                                </strong><br>
+                                                                                <small class="text-muted">
+                                                                                    <i class="fas fa-envelope me-1"></i>
+                                                                                    <%= attendee.email %>
+                                                                                        <span class="ms-3"><i class="fas fa-clock me-1"></i>Registered: <%= new
+                                                                                                Date(attendee.registeredAt).toLocaleDateString() %></span>
+                                                                                </small>
+                                                                            </div>
+                                                                            <% }) %>
                                                                     </div>
-                                                                    <% }) %>
+                                                                    <% } else { %>
+                                                                        <div class="attendees-list">
+                                                                            <p class="text-muted mb-0"><i class="fas fa-info-circle me-2"></i>No attendees registered yet.</p>
+                                                                        </div>
+                                                                        <% } %>
                                                             </div>
-                                                            <% } else if (user.role==='admin' ) { %>
-                                                                <div class="attendees-list">
-                                                                    <p class="text-muted mb-0">
-                                                                        <i class="fas fa-info-circle me-2"></i>No
-                                                                        attendees registered yet.
-                                                                    </p>
-                                                                </div>
-                                                                <% } %>
+                                                            <% } %>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <% }) %>

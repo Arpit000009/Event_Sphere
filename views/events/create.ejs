@@ -6,6 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Event</title>
     <%- include('../partials/header') %>
+        <style>
+            body {
+                background-color: #e3f2fd;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            h2 {
+                color: #0d47a1;
+                font-weight: bold;
+            }
+
+            .form-label {
+                font-weight: 500;
+                color: #0d47a1;
+            }
+
+            .form-control {
+                border: 1px solid #90caf9;
+                border-radius: 6px;
+            }
+
+            .form-control:focus {
+                border-color: #1976d2;
+                box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+            }
+
+            .btn-primary {
+                background-color: #1976d2;
+                border-color: #1976d2;
+            }
+
+            .btn-primary:hover {
+                background-color: #1565c0;
+            }
+
+            .btn-secondary {
+                background-color: #78909c;
+                border-color: #78909c;
+            }
+
+            .btn-secondary:hover {
+                background-color: #546e7a;
+            }
+
+            .container {
+                background-color: #ffffff;
+                padding: 2rem 2.5rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            }
+
+            @media (max-width: 768px) {
+                .container {
+                    padding: 1.5rem;
+                }
+            }
+        </style>
 </head>
 
 <body>

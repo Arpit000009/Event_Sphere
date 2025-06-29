@@ -6,43 +6,52 @@
     <title>About Us - Event Manager</title>
     <%- include('../partials/header') %>
         <style>
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #eaf4fb;
+                color: #2c3e50;
+            }
+
             .hero-banner {
-                background: url('https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+                background: linear-gradient(rgba(0, 0, 70, 0.4), rgba(0, 0, 70, 0.6)),
+                    url('https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
                 height: 300px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: white;
-                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+                color: #fff;
+                text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.8);
             }
 
             .hero-banner h1 {
                 font-size: 3rem;
                 font-weight: bold;
-            }
-
-            .about-section,
-            .features-section,
-            .team-section {
-                max-width: 1100px;
-                margin: 2rem auto;
-                padding: 2rem;
-                background: #fff;
-                border-radius: 10px;
-                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+                animation: fadeIn 1s ease-in-out;
             }
 
             .section-title {
                 text-align: center;
                 margin-bottom: 2rem;
                 font-weight: bold;
-                color: #2c3e50;
+                color: #0d47a1;
+                font-size: 2rem;
             }
 
-            .about-text {
+            section {
+                margin: 2rem auto;
+                padding: 2rem;
+                max-width: 1100px;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+            }
+
+            .about-text p {
                 font-size: 1.1rem;
-                color: #555;
+                color: #444;
                 line-height: 1.8;
+                margin-bottom: 1rem;
             }
 
             .features-grid {
@@ -53,17 +62,34 @@
             }
 
             .feature-card {
-                background: #f9f9f9;
+                background: #f0f7ff;
                 padding: 1.5rem;
-                border-radius: 10px;
+                border-radius: 12px;
                 text-align: center;
-                box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             }
 
             .feature-card i {
-                font-size: 2rem;
-                color: #007bff;
+                font-size: 2.5rem;
+                color: #1565c0;
+                margin-bottom: 0.7rem;
+            }
+
+            .feature-card h5 {
+                font-size: 1.2rem;
                 margin-bottom: 0.5rem;
+                color: #0d47a1;
+            }
+
+            .feature-card p {
+                color: #555;
+                font-size: 0.95rem;
             }
 
             .team-grid {
@@ -74,12 +100,16 @@
             }
 
             .team-member {
-                background: #f8f9fa;
-                border-radius: 10px;
+                background: #e3f2fd;
+                border-radius: 12px;
                 padding: 1rem;
                 width: 250px;
                 text-align: center;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                transition: box-shadow 0.3s ease;
+            }
+
+            .team-member:hover {
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
             }
 
             .team-member img {
@@ -88,17 +118,31 @@
                 height: 120px;
                 object-fit: cover;
                 margin-bottom: 1rem;
+                border: 4px solid #bbdefb;
             }
 
             .team-member h5 {
-                margin-bottom: 0.2rem;
-                color: #2c3e50;
+                margin-bottom: 0.3rem;
+                color: #0d47a1;
+                font-size: 1.1rem;
             }
 
             .team-member p {
                 margin: 0;
-                color: #777;
+                color: #555;
                 font-size: 0.95rem;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
         </style>
 </head>
@@ -115,10 +159,13 @@
         <section class="about-section">
             <h2 class="section-title">Who We Are</h2>
             <div class="about-text">
-                <p>Welcome to our <strong>Event Management System</strong>, a powerful platform built to simplify event
+                <p>Welcome to our <strong>Event Management System (EventSphere)</strong>, a powerful platform built to
+                    simplify event
                     creation, ticket management, and attendee engagement. Whether you're an <strong>admin</strong>
-                    looking to host your next big seminar or a <strong>user</strong> discovering events to attend —
-                    we've got you covered.</p>
+                    looking
+                    to host your next big seminar or a <strong>user</strong> discovering events to attend — we've got
+                    you
+                    covered.</p>
 
                 <p>This system is built using modern web technologies like <strong>Node.js, Express, MongoDB, and
                         EJS</strong>, structured with the MVC architecture for maximum scalability and clarity.</p>
