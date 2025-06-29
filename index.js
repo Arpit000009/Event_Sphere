@@ -1,3 +1,5 @@
+// ✅ Combined Server Code with Socket.IO, Sessions, MongoDB and ChatMessage persistence
+
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -5,111 +7,106 @@ const MongoStore = require('connect-mongo');
 const methodOverride = require('method-override');
 const dotenv = require('dotenv');
 const path = require('path');
+const http = require('http');
+const socketIO = require('socket.io');
+const ChatMessage = require('./models/ChatMessage');
+const User = require('./models/User');
 
 dotenv.config();
-const app = express();
 
-// ✅ Connect to local MongoDB directly
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
+
+// ✅ Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/manage_events', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log('✅ MongoDB connected'))
-.catch(err => {
-  console.error('❌ MongoDB connection error:', err);
-  process.exit(1);const express = require('express');
-  const session = require('express-session');
-  const methodOverride = require('method-override');
-  const connectDB = require('./config/db');
-  const User = require('./models/User');
-  
-  const app = express();
-  
-  // Connect to database
-  connectDB();
-  
-  // Middleware
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
-  app.use(methodOverride('_method'));
-  
-  // Session configuration
-  app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }
-  }));
-  
-  // Set view engine
-  app.set('view engine', 'ejs');
-  
-  // User middleware - make user available in all views
-  app.use(async (req, res, next) => {
-    if (req.session.userId) {
-      try {
-        const user = await User.findById(req.session.userId);
-        res.locals.user = user;
-        req.session.user = user;
-      } catch (err) {
-        console.error('Error fetching user:', err);
-      }
-    }
-    next();
-  });
-  
-  // Routes
-  app.use('/', require('./routes/authRoutes'));
-  app.use('/dashboard', require('./routes/dashboardRoutes'));
-  app.use('/events', require('./routes/eventRoutes'));
-  
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
   });
 
-});
-
-// ✅ Middlewares
-app.use(express.urlencoded({ extended: false }));
+// ✅ Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 
-// ✅ Session middleware using connect-mongo
-app.use(session({
-  secret: 'secretkey', // Replace with strong secret in production
+// ✅ Session configuration (shared by Express and Socket.IO)
+const sessionMiddleware = session({
+  secret: 'your_secret_key',
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: 'mongodb://127.0.0.1:27017/event-management',
+    mongoUrl: 'mongodb://127.0.0.1:27017/manage_events',
     collectionName: 'sessions'
   })
-}));
+});
+app.use(sessionMiddleware);
 
+// ✅ Share session with Socket.IO
+io.use((socket, next) => {
+  sessionMiddleware(socket.request, {}, next);
+});
+
+// ✅ Load user into views
 app.use(async (req, res, next) => {
-  res.locals.user = null;
-
   if (req.session.userId) {
     try {
-      const User = require('./models/User'); // adjust if path differs
       const user = await User.findById(req.session.userId).lean();
       res.locals.user = user;
     } catch (err) {
-      console.error('Error loading user into locals:', err);
+      console.error('Error fetching user:', err);
     }
+  } else {
+    res.locals.user = null;
   }
-
   next();
 });
 
+// ✅ Socket.IO chat handler
+io.on('connection', socket => {
+  console.log('🟢 User connected to chat');
+
+  socket.on('chatMessage', async (data) => {
+    try {
+      const newMessage = new ChatMessage({
+        senderName: data.senderName,
+        message: data.message
+      });
+      await newMessage.save();
+      io.emit('newMessage', {
+        senderName: data.senderName,
+        message: data.message
+      });
+    } catch (err) {
+      console.error('❌ Error saving chat message:', err);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('🔴 User disconnected');
+  });
+});
+
+// ✅ Attach io to request object (optional)
+app.use((req, res, next) => {
+  res.io = io;
+  next();
+});
 
 // ✅ Routes
 app.use('/', require('./routes/authRoutes'));
-app.use('/events', require('./routes/eventRoutes'));
 app.use('/dashboard', require('./routes/dashboardRoutes'));
+app.use('/events', require('./routes/eventRoutes'));
 // app.use('/tickets', require('./routes/ticketRoutes'));
 
-// ✅ Server
+// ✅ Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+server.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

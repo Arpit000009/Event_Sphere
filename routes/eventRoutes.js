@@ -18,4 +18,7 @@ router.get('/:id/price', auth, eventCtrl.renderPricePage);
 // Ticket purchase route
 router.post('/:eventId/purchase', auth, ticketCtrl.purchaseTicket);
 
+router.get('/chat/group', auth, eventCtrl.renderGroupChatPage);
+
+
 module.exports = router;

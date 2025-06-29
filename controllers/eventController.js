@@ -1,5 +1,7 @@
 const Event = require('../models/Event');
 const Ticket = require('../models/Ticket');
+const User = require('../models/User');
+const ChatMessage = require('../models/ChatMessage');
 
 // Show create form
 exports.getCreateForm = (req, res) => {
@@ -136,4 +138,11 @@ exports.renderPricePage = async (req, res) => {
     console.error('Error in renderPricePage:', err);
     res.status(500).send('Something went wrong');
   }
+};
+
+//rendergroupChatPage
+exports.renderGroupChatPage = async (req, res) => {
+  const user = await User.findById(req.session.userId).lean();
+  const messages = await ChatMessage.find().sort({ createdAt: 1 }).lean();
+  res.render('events/chat', { user, messages });
 };
