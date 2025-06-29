@@ -29,6 +29,9 @@ router.get('/cancel', (req, res) => {
   res.send('❌ Payment cancelled.');
 });
 
+router.post('/purchase/:eventId', ensureAuth, isUser, ticketController.purchaseTicket);
+
+
 module.exports = router;
 
 

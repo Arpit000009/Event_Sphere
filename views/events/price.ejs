@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Payment</title>
     <%- include('../partials/header') %>
         <style>
@@ -33,7 +33,7 @@
         </div>
 
         <script>
-            document.getElementById('paymentForm').addEventListener('submit', function (e) {
+            document.getElementById('paymentForm').addEventListener('submit', function () {
                 const btn = document.getElementById('confirmBtn');
                 btn.innerText = 'Ticket Purchased';
                 btn.classList.remove('btn-success');
