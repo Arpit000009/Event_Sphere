@@ -20,6 +20,7 @@
     "method-override": "^3.0.0",
     "mongoose": "^8.16.1",
     "nodemon": "^3.1.10",
+    "razorpay": "^2.9.6",
     "socket.io": "^4.8.1"
   }
 }

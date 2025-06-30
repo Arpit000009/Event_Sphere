@@ -94,9 +94,9 @@
                             </p>
 
                             <% if (user && user.role==='user' ) { %>
-                                <form action="/tickets/purchase/<%= event._id %>" method="POST" class="mt-4">
-                                    <button type="submit" class="btn btn-success">Buy Ticket</button>
-                                </form>
+                               <div> <a href="/events/<%= event._id %>/price" class="btn btn-success">
+                                    Buy Ticket                              </a>
+                                </div>
                                 <% } %>
 
                                     <a href="/dashboard" class="btn btn-secondary mt-3">Back</a>
