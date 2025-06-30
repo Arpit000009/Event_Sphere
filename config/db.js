@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/manage_events');
+    await mongoose.connect(process.env.MONGODB_URI);////put you mongosh
     console.log('MongoDB connected');
   } catch (err) {
     console.error(err);
