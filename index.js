@@ -11,6 +11,7 @@ const http = require('http');
 const socketIO = require('socket.io');
 const ChatMessage = require('./models/ChatMessage');
 const User = require('./models/User');
+const passport = require('passport');
 
 dotenv.config();
 
@@ -110,3 +111,17 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
+
+
+// Load passport config
+require('./config/passport')(passport); // if in config folder
+
+
+// Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Load Routes
+const authRoutes = require('./routes/authRoutes');
+app.use('/auth', authRoutes);
+app.use('/', authRoutes);

@@ -1,44 +1,50 @@
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-
-// Load User model
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
+// ADD THIS:
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 module.exports = function (passport) {
-  // Local Strategy
+  // ✅ Local Strategy
   passport.use(new LocalStrategy({
-    usernameField: 'email', // by default it looks for 'username'
+    usernameField: 'email'
   }, async (email, password, done) => {
+    // your local auth logic
+  }));
+
+  // ✅ Google Strategy — ADD BELOW LOCAL STRATEGY
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: '/auth/google/callback'
+  }, async (accessToken, refreshToken, profile, done) => {
     try {
-      // Match user
-      const user = await User.findOne({ email: email.toLowerCase() });
+      const existingUser = await User.findOne({ googleId: profile.id });
+      if (existingUser) return done(null, existingUser);
 
-      if (!user) {
-        return done(null, false, { message: 'Incorrect email' });
-      }
+      const newUser = new User({
+        googleId: profile.id,
+        email: profile.emails[0].value,
+        name: profile.displayName
+      });
 
-      // Match password
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return done(null, false, { message: 'Incorrect password' });
-      }
-
-      return done(null, user);
+      await newUser.save();
+      return done(null, newUser);
     } catch (err) {
-      return done(err);
+      return done(err, null);
     }
   }));
 
-  // Serialize user to session
+  // ✅ Sessions
   passport.serializeUser((user, done) => {
     done(null, user.id);
   });
 
-  // Deserialize user from session
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await User.findById(id).select('-password'); // Optional: remove password
+      const user = await User.findById(id).select('-password');
       done(null, user);
     } catch (err) {
       done(err, null);

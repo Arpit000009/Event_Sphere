@@ -125,6 +125,36 @@
       .form-check-label {
         font-weight: normal;
       }
+      .btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: white;
+  color: #444;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 100%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-google:hover {
+  background-color: #f7f7f7;
+  text-decoration: none;
+  color: #222;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+}
+
     </style>
 </head>
 
@@ -168,6 +198,15 @@
     <div class="register-link">
       Don't have an account? <a href="/register">Create one here</a>
     </div>
+
+    <div class="text-center mt-3">
+      <a href="/auth/google" class="btn-google">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-icon">
+        Continue with Google
+      </a>
+    </div>
+    
+    
   </div>
 
   <script>
